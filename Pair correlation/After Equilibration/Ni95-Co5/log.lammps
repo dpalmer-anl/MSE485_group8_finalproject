@@ -1,0 +1,319 @@
+LAMMPS (29 Oct 2020)
+units   metal
+boundary    p p p
+atom_style    atomic
+#lattice        bcc 3.021
+
+#region		entirebox prism 0 258.666       0.0    365.81   0 9.956 0 0 0 units box
+#create_box      2 entirebox
+
+
+#region		upper   prism    0 258.666      243.878    365.81   0 9.956  0 0 0 units box
+#region		twin   prism    0 258.666      121.941    243.873   0 9.956  0 0 0 units box
+#region		lower   prism    0 258.666      0.0    121.936   0 9.956  0 0 0 units box
+
+
+#lattice         fcc 3.52 orient x 1 1 -2 orient y 1 1 1 orient z 1 -1 0 origin 0.9 0.9 0.9
+
+#create_atoms    1 region upper
+
+#lattice         fcc 3.52 orient x -1 -1 2 orient y 1 1 1 orient z -1 1 0 origin 0.9 0.9 0.9
+
+#create_atoms    1 region twin
+
+#lattice         fcc 3.52 orient x 1 1 -2 orient y 1 1 1 orient z 1 -1 0 origin 0.9 0.9 0.9
+
+#create_atoms    1 region lower
+
+
+read_data 2.data
+Reading data file ...
+  triclinic box = (0.0000000 0.0000000 0.0000000) to (172.89763 183.38563 9.9822491) with tilt (0.0000000 0.0000000 0.0000000)
+  4 by 5 by 1 MPI processor grid
+  reading atoms ...
+  28800 atoms
+  reading velocities ...
+  28800 velocities
+  read_data CPU = 0.066 seconds
+
+
+#pair_style        eam/fs
+#pair_coeff      * * niti_fr.eam.fs Ni Ti
+
+#pair_style       meam/c
+#pair_coeff       * * library.meam Ni Ti NiTi.meam Ni Ti
+
+#write_data        1.data
+
+pair_style	eam/alloy
+pair_coeff	* * NiCo-lammps-2014.alloy Ni Co
+
+#group 1 region entirebox
+#set group 1 type/fraction 2 0.2 12393
+
+#write_data        5.data
+
+## COMPUTES
+#==========
+
+compute 		sigma all stress/atom NULL
+
+compute		xx all reduce sum c_sigma[1]
+compute		yy all reduce sum c_sigma[2]
+compute		zz all reduce sum c_sigma[3]
+compute 		xy all reduce sum c_sigma[4]
+compute 		xz all reduce sum c_sigma[5]
+compute 		yz all reduce sum c_sigma[6]
+
+variable		stxx equal c_xx/(vol)
+variable 		styy equal c_yy/(vol)
+variable		stzz equal c_zz/(vol)
+variable		stxy equal c_xy/(vol)
+variable		stxz equal c_xz/(vol)
+variable		styz equal c_yz/(vol)
+
+variable        L equal  201.24
+
+variable        strainyy equal (ly-v_L)/v_L
+
+
+
+compute           pe  all pe/atom
+compute           ke  all ke/atom
+compute           csp all centro/atom fcc
+compute 		peratom all stress/atom NULL
+
+
+dump            cfgformat all cfg 50 runstep_*.cfg mass type xs ys zs c_csp c_pe c_ke c_peratom[1] c_peratom[2] c_peratom[3] c_peratom[4] c_peratom[5] c_peratom[6]
+dump_modify     cfgformat  element Ni Ti
+
+
+
+thermo		50
+thermo_style custom step temp pe ke etotal vol press v_stxx v_styy v_stzz v_stxy v_stxz v_styz
+
+#timestep        0.001
+#minimize        1.0e-8 1.0e-8 100000 100000
+
+
+
+## TEMPERATURE CONTROLLER
+#========================
+
+
+#compute         temp3d all temp
+#velocity        all create 10 5812775 temp temp3d
+
+#timestep        0.001
+#minimize        1.0e-8 1.0e-8 100000 100000
+
+#fix equil all npt temp 10 10 0.04 tri 0 0 0.5
+#timestep 0.001
+#run 2000
+
+#unfix equil
+
+#fix equil2 all npt temp 10 10 0.04 tri 0 0 0.5
+#fix 2 all atom/swap 10 100 29494 10 semi-grand no ke yes types 1 2
+#timestep 0.001
+#run 5000
+
+
+#unfix equil2
+#unfix 2
+fix equil2 all npt temp 10 10 0.04 y 0 0 0.5 z 0 0 0.5
+run 500
+Neighbor list info ...
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.5
+  ghost atom cutoff = 8.5
+  binsize = 4.25, bins = 41 44 3
+  2 neighbor lists, perpetual/occasional/extra = 1 1 0
+  (1) pair eam/alloy, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton/tri
+      stencil: half/bin/3d/newton/tri
+      bin: standard
+  (2) compute centro/atom, occasional
+      attributes: full, newton on
+      pair build: full/bin/atomonly
+      stencil: full/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 9.286 | 9.287 | 9.287 Mbytes
+Step Temp PotEng KinEng TotEng Volume Press v_stxx v_styy v_stzz v_stxy v_stxz v_styz 
+       0            0    -128052.4            0    -128052.4    316506.56   -10263.876    10277.278    10268.745    10245.606   -14.238573  -0.75475605   -1.2670955 
+      50   0.82264325   -128059.59    3.0623413   -128056.53    315234.69   -3048.5471    5855.2145    1706.6135    1583.8131     799.5852   -2.3942228   -1.0584746 
+     100   0.67753901   -128058.59    2.5221816   -128056.07    315077.68   -2077.6472    5239.7666    552.14732    441.02753     901.5669   -2.4335911   -1.2018968 
+     150   0.72721661   -128057.64    2.7071096   -128054.94    315024.64   -1856.5822    5168.2054      227.112    174.42922    912.73456  -0.69086479   -1.1141025 
+     200    1.2494254   -128058.34    4.6510645   -128053.69    315013.66   -1745.7242    5051.5142    99.047211    86.611182    932.72175   -2.5191494   -1.5141796 
+     250    1.3829404   -128057.31    5.1480825   -128052.16    315011.39   -1702.5143    5013.5941    46.504528    47.444409    935.89124   -2.6414957  -0.51536479 
+     300    1.4504778   -128055.44    5.3994949   -128050.04    315004.63   -1702.8001    5062.8632    22.517003    23.020076    911.94078    -1.151358    -2.226525 
+     350    1.9564016   -128054.76     7.282828   -128047.47     315011.5   -1670.8682     4987.535    14.396933    10.672571     935.9972   -1.8157227   -1.0483036 
+     400     2.215812   -128052.48    8.2484997   -128044.24    315003.15   -1668.9864    4998.5277    5.7789545    2.6524907    947.92446   -1.7703615    0.2274558 
+     450     2.594172   -128049.77    9.6569687   -128040.11    315023.96   -1663.9527    4984.1742    3.7982832    3.8854839    895.37884   -3.1234549   -3.4468403 
+     500    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+Loop time of 3.02569 on 20 procs for 500 steps with 28800 atoms
+
+Performance: 14.278 ns/day, 1.681 hours/ns, 165.251 timesteps/s
+98.9% CPU use with 20 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 2.6274     | 2.6626     | 2.7118     |   1.3 | 88.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.032272   | 0.065846   | 0.11698    |   8.7 |  2.18
+Output  | 0.21208    | 0.2122     | 0.21434    |   0.1 |  7.01
+Modify  | 0.055751   | 0.07339    | 0.097878   |   5.7 |  2.43
+Other   |            | 0.01166    |            |       |  0.39
+
+Nlocal:        1440.00 ave        1440 max        1440 min
+Histogram: 20 0 0 0 0 0 0 0 0 0
+Nghost:        6469.00 ave        6469 max        6469 min
+Histogram: 20 0 0 0 0 0 0 0 0 0
+Neighs:       161280.0 ave      161715 max      160882 min
+Histogram: 3 0 0 5 4 2 2 2 0 2
+FullNghs:     322560.0 ave      322560 max      322560 min
+Histogram: 20 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 6451200
+Ave neighs/atom = 224.00000
+Neighbor list builds = 0
+Dangerous builds = 0
+unfix equil2
+
+
+#write_data        4.data
+#thermo		5
+#thermo_style custom step temp pe ke etotal vol press v_stxx v_styy v_stzz v_stxy v_stxz v_styz
+
+# Equilibriating by NPT Algorithm
+#=================================
+
+#fix 2 all atom/swap 1 1 29494 10 semi-grand no types 1 2
+
+#fix 2 1 gcmc 1 100 100 2 29494 10 -0.5 10.0 pressure 0
+
+#timestep 0.001
+#run 1000
+
+#fix equil2 all npt temp 10 10 0.04 tri 0 0 0.5
+#timestep 0.001
+#run 500
+
+
+
+#compute RDF all rdf 200 2 2
+compute RDF all rdf 200 2 2
+fix 1 all ave/time 1 100 100 c_RDF[*] file tmp.rdf mode vector
+timestep 0.001
+run 500
+Neighbor list info ...
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.5
+  ghost atom cutoff = 8.5
+  binsize = 4.25, bins = 41 44 3
+  3 neighbor lists, perpetual/occasional/extra = 1 2 0
+  (1) pair eam/alloy, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton/tri
+      stencil: half/bin/3d/newton/tri
+      bin: standard
+  (2) compute centro/atom, occasional
+      attributes: full, newton on
+      pair build: full/bin/atomonly
+      stencil: full/bin/3d
+      bin: standard
+  (3) compute rdf, occasional, copy from (1)
+      attributes: half, newton on
+      pair build: copy
+      stencil: none
+      bin: none
+Per MPI rank memory allocation (min/avg/max) = 8.889 | 8.890 | 8.890 Mbytes
+Step Temp PotEng KinEng TotEng Volume Press v_stxx v_styy v_stzz v_stxy v_stxz v_styz 
+     500    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+     550    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+     600    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+     650    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+     700    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+     750    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+     800    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+     850    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+     900    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+     950    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+    1000    3.5068542   -128048.04    13.054485   -128034.99    315008.34   -1666.0207    4999.7774  -0.76343537  -0.95185217    914.93493    -1.312016   -1.6883542 
+Loop time of 3.40961 on 20 procs for 500 steps with 28800 atoms
+
+Performance: 12.670 ns/day, 1.894 hours/ns, 146.644 timesteps/s
+98.6% CPU use with 20 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 2.67       | 2.6981     | 2.7479     |   1.1 | 79.13
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.034557   | 0.074022   | 0.10357    |   7.3 |  2.17
+Output  | 0.22261    | 0.22403    | 0.22412    |   0.1 |  6.57
+Modify  | 0.36946    | 0.39915    | 0.4317     |   3.6 | 11.71
+Other   |            | 0.01432    |            |       |  0.42
+
+Nlocal:        1440.00 ave        1440 max        1440 min
+Histogram: 20 0 0 0 0 0 0 0 0 0
+Nghost:        6514.20 ave        6565 max        6469 min
+Histogram: 3 2 3 1 1 2 1 3 3 1
+Neighs:       161280.0 ave      161351 max      161164 min
+Histogram: 1 1 2 0 2 2 1 6 4 1
+FullNghs:     322560.0 ave      322560 max      322560 min
+Histogram: 20 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 6451200
+Ave neighs/atom = 224.00000
+Neighbor list builds = 0
+Dangerous builds = 0
+
+
+#region		hole cylinder z 125 60 8 -500 500 units box
+#delete_atoms	region hole
+#region		hole2 cylinder z 75 -27 3 -500 500 units box
+#delete_atoms	region hole2
+#region		hole3 cylinder z 95 -27 3 -500 500 units box
+#delete_atoms	region hole3
+
+
+
+
+#dump            cfgformat2 all cfg 100 runstep_*.cfg mass type xs ys zs c_csp c_pe c_ke c_peratom[1] c_peratom[2] c_peratom[3] c_peratom[4] c_peratom[5] c_peratom[6]
+#dump_modify     cfgformat2  element Ni Ti
+#dump 		1 all custom 250 dump.two-element.dat id type x y z fx fy fz
+#write_data        1.data
+
+#timestep 0.001
+#run 100
+
+#region		hole cylinder z 130 -50 3.5 -500 500 units box
+#delete_atoms	region hole
+
+
+#dump          cfgformat2 all cfg 100 runstep_*.cfg mass type xs ys zs c_csp c_pe c_ke c_peratom[1] c_peratom[2] c_peratom[3] c_peratom[4] c_peratom[5] c_peratom[6]
+#dump_modify   cfgformat element Ni Ti
+
+#fix             thermoBaro all npt temp 10 10 0.04 x 0 0 5 y 0 0 5 z 0 0 5 xy 0 0 5 yz 0 0 5 couple none
+#fix             def all deform 1 xz final 1.4 remap x units box
+
+#fix             averaging  all ave/time 1 100 100 v_stxx v_styy v_stzz v_stxy v_stxz v_styz  file load.stress
+
+#timestep 0.001
+#run 70000
+
+
+
+
+
+
+
+
+
+
+Total wall time: 0:00:06

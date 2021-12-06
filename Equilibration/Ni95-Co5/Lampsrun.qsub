@@ -1,0 +1,14 @@
+#!/bin/csh -v
+#SBATCH --partition=secondary	 
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=20
+#SBATCH --time=01:00:00
+#SBATCH --output=logout.lammps
+#SBATCH --job-name=TopModel
+#SBATCH --mail-user=ocelebi2@illinois.edu
+#SBATCH --mail-type=ALL
+cd ~/Nico/
+#module load openmpi
+module load intel/18.0
+mpirun -np 20 ./lmp_mpi < intersect.in
+

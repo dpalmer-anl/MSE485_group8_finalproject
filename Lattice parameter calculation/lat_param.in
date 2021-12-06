@@ -1,0 +1,53 @@
+units   metal
+dimension 3
+boundary    p p p
+atom_style    atomic
+
+read_data 1.data
+
+pair_style        eam/alloy
+pair_coeff      * * NiCo-lammps-2014.alloy Ni Co
+
+
+## COMPUTES 
+#==========
+
+compute 		sigma all stress/atom NULL
+
+compute		xx all reduce sum c_sigma[1]
+compute		yy all reduce sum c_sigma[2]
+compute		zz all reduce sum c_sigma[3]
+compute 		xy all reduce sum c_sigma[4]
+compute 		xz all reduce sum c_sigma[5]
+compute 		yz all reduce sum c_sigma[6]
+
+variable		stxx equal c_xx/(vol)
+variable 		styy equal c_yy/(vol)
+variable		stzz equal c_zz/(vol)
+variable		stxy equal c_xy/(vol)
+variable		stxz equal c_xz/(vol)
+variable		styz equal c_yz/(vol)
+
+variable        L equal  201.24
+
+variable        strainyy equal (ly-v_L)/v_L
+
+
+
+compute           pe  all pe/atom
+compute           ke  all ke/atom
+compute           csp all centro/atom fcc
+compute 		peratom all stress/atom NULL
+
+
+dump            1 all custom 500 dump.minimize mass type xs ys zs c_csp c_pe c_ke c_peratom[1] c_peratom[2] c_peratom[3] c_peratom[4] c_peratom[5] c_peratom[6]
+
+thermo		50
+thermo_style custom step temp pe ke etotal vol press v_stxx v_styy v_stzz v_stxy v_stxz v_styz
+
+timestep 0.001
+
+minimize       1e-5 1e-5 5 1000
+
+
+

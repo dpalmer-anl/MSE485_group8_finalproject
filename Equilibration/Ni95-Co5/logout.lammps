@@ -1,0 +1,174 @@
+
+
+
+
+
+
+
+
+
+cd ~/Nico/
+
+module load intel/18.0
+setenv ADVISOR_2018_DIR /usr/local/intel/parallel_studio_xe_2018/advisor_2018.1.1.535164 ; setenv CLASSPATH /usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/mpi/intel64/lib/mpi.jar:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/daal/lib/daal.jar ; setenv CLCK_ROOT /usr/local/intel/parallel_studio_xe_2018/clck/2018.1 ; setenv CPATH /usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/ipp/include:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/mkl/include:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/pstl/include:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/tbb/include:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/tbb/include:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/daal/include:/usr/local/mpi/rh7/openmpi/4.1.0/gcc/7.2.0/pmi2/include:/usr/local/gcc/7.2.0/include ; setenv CPLUS_INCLUDE_PATH /usr/local/intel/parallel_studio_xe_2018/clck/2018.1/include ; setenv DAALROOT /usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/daal ; setenv GDBSERVER_MIC /usr/local/intel/parallel_studio_xe_2018/debugger_2018/gdb/targets/intel64/x200/bin/gdbserver ; setenv GDB_CROSS /usr/local/intel/parallel_studio_xe_2018/debugger_2018/gdb/intel64/bin/gdb-ia ; setenv INFOPATH /usr/local/intel/parallel_studio_xe_2018/documentation_2018/en/debugger/gdb-ia/info:/usr/local/intel/parallel_studio_xe_2018/documentation_2018/en/debugger/gdb-igfx/info/ ; setenv INSPECTOR_2018_DIR /usr/local/intel/parallel_studio_xe_2018/inspector_2018.1.1.535159 ; setenv INTEL_LICENSE_FILE 1700@cc-lic1.campuscluster.illinois.edu ; setenv INTEL_PYTHONHOME /usr/local/intel/parallel_studio_xe_2018/debugger_2018/python/intel64/ ; setenv IPPROOT /usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/ipp ; setenv I_MPI_ROOT /usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/mpi ; setenv LD_LIBRARY_PATH /usr/local/intel/parallel_studio_xe_2018/itac/2018.1.017/intel64/slib:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64_lin:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/mpi/intel64/lib:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/mpi/mic/lib:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/ipp/lib/intel64:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64_lin:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/mkl/lib/intel64_lin:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/tbb/lib/intel64/gcc4.4:/usr/local/intel/parallel_studio_xe_2018/debugger_2018/iga/lib:/usr/local/intel/parallel_studio_xe_2018/debugger_2018/libipt/intel64/lib:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/daal/lib/intel64_lin:/usr/local/mpi/rh7/openmpi/4.1.0/gcc/7.2.0/pmi2/lib:/usr/local/gcc/7.2.0/lib/gcc/x86_64-pc-linux-gnu/7.2.0:/usr/local/gcc/7.2.0/lib64:/usr/local/gcc/7.2.0/lib:/usr/local/mpc/1.0.3/lib:/usr/local/mpfr/3.1.4/lib:/usr/local/gmp/6.1.0/lib:/usr/local/isl/0.16.1/lib ; setenv LIBRARY_PATH /usr/local/intel/parallel_studio_xe_2018/clck/2018.1/lib/intel64:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/ipp/lib/intel64:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64_lin:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/mkl/lib/intel64_lin:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/tbb/lib/intel64/gcc4.4:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/tbb/lib/intel64/gcc4.4:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/daal/lib/intel64_lin:/usr/local/gcc/7.2.0/lib64:/usr/local/gcc/7.2.0/lib ; setenv LOADEDMODULES gcc/7.2.0:openmpi/4.1.0-gcc-7.2.0-pmi2:intel/18.0 ; setenv MANPATH /usr/local/intel/parallel_studio_xe_2018/itac/2018.1.017/man:/usr/local/intel/parallel_studio_xe_2018/man/common:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/mpi/man:/usr/local/intel/parallel_studio_xe_2018/documentation_2018/en/debugger/gdb-ia/man:/usr/local/intel/parallel_studio_xe_2018/documentation_2018/en/debugger/gdb-igfx/man:/usr/local/mpi/rh7/openmpi/4.1.0/gcc/7.2.0/pmi2/share/man:/usr/local/gcc/7.2.0/share/man:/usr/share/man:/usr/local/share/man ; setenv MKLROOT /usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/mkl ; setenv MPM_LAUNCHER /usr/local/intel/parallel_studio_xe_2018/debugger_2018/mpm/mic/bin/start_mpm.sh ; setenv NLSPATH /usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64/locale/%l_%t/%N:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/mkl/lib/intel64_lin/locale/%l_%t/%N:/usr/local/intel/parallel_studio_xe_2018/debugger_2018/gdb/intel64/share/locale/%l_%t/%N ; setenv PATH /usr/local/intel/parallel_studio_xe_2018/advisor_2018.1.1.535164/bin64:/usr/local/intel/parallel_studio_xe_2018/vtune_amplifier_2018.1.0.535340/bin64:/usr/local/intel/parallel_studio_xe_2018/inspector_2018.1.1.535159/bin64:/usr/local/intel/parallel_studio_xe_2018/itac/2018.1.017/intel64/bin:/usr/local/intel/parallel_studio_xe_2018/itac/2018.1.017/intel64/bin:/usr/local/intel/parallel_studio_xe_2018/clck/2018.1/bin/intel64:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/bin/intel64:/usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/mpi/intel64/bin:/usr/local/mpi/rh7/openmpi/4.1.0/gcc/7.2.0/pmi2/bin:/usr/local/gcc/7.2.0/bin:/usr/lib64/qt-3.3/bin:/usr/local/perlbrew/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/ocelebi2/bin:/usr/lpp/mmfs/bin:/usr/local/intel/parallel_studio_xe_2018/parallel_studio_xe_2018.1.038/bin ; setenv PSTLROOT /usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/pstl ; setenv PYTHONPATH /usr/local/intel/parallel_studio_xe_2018/advisor_2018.1.1.535164/pythonapi ; setenv TBBROOT /usr/local/intel/parallel_studio_xe_2018/compilers_and_libraries_2018.1.163/linux/tbb ; setenv VTUNE_AMPLIFIER_2018_DIR /usr/local/intel/parallel_studio_xe_2018/vtune_amplifier_2018.1.0.535340 ; setenv VT_ADD_LIBS -ldwarf\ -lelf\ -lvtunwind\ -lm\ -lpthread ; setenv VT_ARCH intel64 ; setenv VT_LIB_DIR /usr/local/intel/parallel_studio_xe_2018/itac/2018.1.017/intel64/lib ; setenv VT_MPI impi4 ; setenv VT_ROOT /usr/local/intel/parallel_studio_xe_2018/itac/2018.1.017 ; setenv VT_SLIB_DIR /usr/local/intel/parallel_studio_xe_2018/itac/2018.1.017/intel64/slib ; setenv _LMFILES_ /usr/local/modulefiles/gcc/7.2.0:/usr/local/modulefiles/openmpi/4.1.0-gcc-7.2.0-pmi2:/usr/local/modulefiles/intel/18.0 ;
+mpirun -np 20 ./lmp_mpi < intersect.in
+LAMMPS (29 Oct 2020)
+Created triclinic box = (0.0000000 0.0000000 0.0000000) to (172.89763 183.38563 9.9822491) with tilt (0.0000000 0.0000000 0.0000000)
+  4 by 5 by 1 MPI processor grid
+Lattice spacing in x,y,z = 5.7632542 6.1128542 4.9911245
+Created 14400 atoms
+  create_atoms CPU = 0.003 seconds
+Lattice spacing in x,y,z = 5.7632542 6.1128542 4.9911245
+Created 14400 atoms
+  create_atoms CPU = 0.001 seconds
+28800 atoms in group 1
+Setting atom values ...
+  1441 settings made for type/fraction
+System init for write_data ...
+Neighbor list info ...
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.5
+  ghost atom cutoff = 8.5
+  binsize = 4.25, bins = 41 44 3
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair eam/alloy, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton/tri
+      stencil: half/bin/3d/newton/tri
+      bin: standard
+Neighbor list info ...
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.5
+  ghost atom cutoff = 8.5
+  binsize = 4.25, bins = 41 44 3
+  2 neighbor lists, perpetual/occasional/extra = 1 1 0
+  (1) pair eam/alloy, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton/tri
+      stencil: half/bin/3d/newton/tri
+      bin: standard
+  (2) compute centro/atom, occasional
+      attributes: full, newton on
+      pair build: full/bin/atomonly
+      stencil: full/bin/3d
+      bin: standard
+Setting up Verlet run ...
+  Unit style    : metal
+  Current step  : 0
+  Time step     : 0.001
+Per MPI rank memory allocation (min/avg/max) = 9.286 | 9.287 | 9.287 Mbytes
+Step Temp PotEng KinEng TotEng Volume Press v_stxx v_styy v_stzz v_stxy v_stxz v_styz 
+       0            0   -128027.58            0   -128027.58    316506.56   -10931.985    10941.902    10932.519    10921.533    3.3581093    1.2045992    2.2375037 
+      50            0   -128041.65            0   -128041.65    316506.56   -10292.736    10305.192    10297.668    10275.347 -0.051619269    3.3478748  -0.19595329 
+     100            0   -128044.39            0   -128044.39    316506.56   -10252.557    10260.793     10261.11    10235.768   -2.2691058    2.1140433  -0.51266608 
+     150            0   -128045.61            0   -128045.61    316506.56   -10258.438    10266.429    10266.796     10242.09   -3.9661157  -0.63767344   -1.0333008 
+     200            0   -128046.54            0   -128046.54    316506.56   -10261.049    10269.549    10268.523    10245.076   -4.7420225   -1.6384473   0.83646985 
+     250            0   -128047.18            0   -128047.18    316506.56   -10259.103    10267.744     10267.28    10242.285   -4.8093099   -3.1639121    1.3074744 
+     300            0   -128047.58            0   -128047.58    316506.56   -10259.961    10266.571    10268.557    10244.755   -4.4653331   -1.2591778  -0.68828618 
+     350            0   -128047.95            0   -128047.95    316506.56   -10264.378     10272.92    10273.254     10246.96   -5.9171251  -0.74539026   -1.8102554 
+     400            0   -128048.42            0   -128048.42    316506.56   -10255.079    10263.365    10261.069    10240.805   -6.5126965  -0.50052654  -0.86716059 
+     450            0   -128048.63            0   -128048.63    316506.56   -10245.217    10253.787    10251.127    10230.737   -6.3218475   -2.3664743  -0.70731355 
+     500            0    -128048.8            0    -128048.8    316506.56   -10251.743    10259.488    10258.462    10237.279   -7.5724816   -1.8884341   -1.8408893 
+     550            0   -128048.98            0   -128048.98    316506.56   -10253.415    10261.129    10260.224    10238.891   -7.0196713   -1.3558974   -2.2783399 
+     600            0    -128049.1            0    -128049.1    316506.56    -10261.61    10269.054    10267.944    10247.833   -7.9881046   -1.2782366   -2.1557526 
+     650            0   -128049.29            0   -128049.29    316506.56   -10260.741    10269.526    10266.714    10245.981   -8.4453496   -1.5455673   -1.8622052 
+     700            0   -128049.48            0   -128049.48    316506.56   -10264.174    10272.566    10270.235     10249.72   -9.0744006   -1.7584234   -1.6564632 
+     750            0   -128049.61            0   -128049.61    316506.56   -10263.662    10271.645    10270.366    10248.975   -8.9576335   -1.5385898   -1.5337007 
+     800            0   -128049.72            0   -128049.72    316506.56   -10262.932    10272.567    10267.317    10248.914   -9.2208037  -0.32407717   -1.3251577 
+     850            0   -128049.87            0   -128049.87    316506.56   -10267.348    10278.192    10271.261    10252.592   -9.2796525 -0.018762782   -1.7311718 
+     900            0   -128049.95            0   -128049.95    316506.56   -10271.577     10282.44     10275.99      10256.3   -10.472526   0.20307334   -1.7545913 
+     950            0   -128050.05            0   -128050.05    316506.56   -10267.287    10276.906    10272.905     10252.05   -9.5836366   0.25659246  -0.99554847 
+    1000            0   -128050.13            0   -128050.13    316506.56   -10266.616    10275.596    10272.483     10251.77   -8.7088535   0.64821273   -1.7538819 
+    1050            0   -128050.26            0   -128050.26    316506.56   -10267.593    10277.404     10273.67    10251.705   -8.5821991   0.53994618   -2.0182885 
+    1100            0   -128050.35            0   -128050.35    316506.56   -10266.302     10275.74    10272.929    10250.237   -7.9592551   0.47518244   -2.4138281 
+    1150            0   -128050.42            0   -128050.42    316506.56   -10261.586    10270.213    10268.917    10245.628   -6.7385903   0.28244697   -2.8062504 
+    1200            0   -128050.47            0   -128050.47    316506.56   -10258.748    10267.548    10266.503    10242.193   -6.4596272  -0.16040384   -1.9794828 
+    1250            0   -128050.56            0   -128050.56    316506.56   -10256.873     10265.61    10264.986    10240.022   -6.3038998   -1.4468732   -2.3705114 
+    1300            0   -128050.63            0   -128050.63    316506.56   -10249.558    10258.709    10258.003    10231.962   -7.7097421  -0.88803451   -1.7888237 
+    1350            0   -128050.73            0   -128050.73    316506.56    -10248.91    10257.385    10257.451    10231.892   -8.2934318   -1.1590962   -2.2088958 
+    1400            0   -128050.77            0   -128050.77    316506.56   -10249.364     10256.88    10257.608    10233.604   -8.1882792  -0.28531444   -2.3430095 
+    1450            0   -128050.82            0   -128050.82    316506.56   -10249.696    10256.711    10257.631    10234.748   -7.9452716  -0.26354963   -1.5170267 
+    1500            0    -128050.9            0    -128050.9    316506.56   -10253.808    10260.233    10261.618    10239.573    -8.895651  -0.43186693    -1.146554 
+    1550            0   -128050.94            0   -128050.94    316506.56   -10252.101    10259.269    10259.139    10237.895   -8.6342786  -0.44331582  -0.94692903 
+    1600            0   -128050.98            0   -128050.98    316506.56   -10251.917    10259.224    10259.277    10237.251   -8.8224318   0.08020037   -1.0406798 
+    1650            0   -128051.03            0   -128051.03    316506.56   -10249.937    10257.973     10257.09    10234.749   -10.087599    0.8747024   -0.6003423 
+    1700            0   -128051.07            0   -128051.07    316506.56   -10252.439    10260.319    10259.839    10237.159   -10.612281    1.2388648  -0.27205262 
+    1750            0   -128051.16            0   -128051.16    316506.56   -10252.379    10260.186    10260.294    10236.658   -10.818307   0.54779675 0.0058833878 
+    1800            0    -128051.2            0    -128051.2    316506.56    -10261.72    10269.313    10269.038    10246.809   -11.692215     0.415108   -0.4598087 
+    1850            0   -128051.26            0   -128051.26    316506.56   -10260.951    10268.775    10268.989     10245.09   -12.638518    0.9284683  -0.16125367 
+    1900            0   -128051.32            0   -128051.32    316506.56   -10264.581    10272.712    10272.218    10248.811   -11.945542   0.95842753  -0.44831581 
+    1950            0   -128051.36            0   -128051.36    316506.56   -10261.642    10270.122     10269.46    10245.345   -11.682666    1.1140662  -0.27165111 
+    2000            0   -128051.39            0   -128051.39    316506.56   -10261.962    10270.932    10269.718    10245.235   -11.596142    1.2491745  -0.46709888 
+    2050            0   -128051.43            0   -128051.43    316506.56   -10262.948    10271.855    10270.678     10246.31   -10.830938     1.395385  -0.21758686 
+    2100            0   -128051.48            0   -128051.48    316506.56   -10261.253    10270.603    10268.548    10244.607   -9.9876027   0.87462432   -1.1732131 
+    2150            0   -128051.52            0   -128051.52    316506.56   -10256.906    10266.442    10264.085    10240.191   -10.704881   0.78107214   -1.0651047 
+    2200            0   -128051.56            0   -128051.56    316506.56   -10260.158    10269.503    10268.571    10242.399    -10.50499    1.8489835  -0.99318095 
+    2250            0    -128051.6            0    -128051.6    316506.56   -10259.935    10269.248    10268.145    10242.413   -11.346856    1.1501897   -1.0760991 
+    2300            0   -128051.65            0   -128051.65    316506.56   -10259.663    10268.262    10267.805    10242.923    -11.51426    0.8208926    -1.424925 
+    2350            0   -128051.69            0   -128051.69    316506.56   -10261.522    10270.071    10269.671    10244.823   -12.406044   0.84462992   -1.0354932 
+    2400            0   -128051.71            0   -128051.71    316506.56   -10262.948    10271.704    10270.901    10246.239   -12.682241   0.97763074  -0.76423708 
+    2450            0   -128051.75            0   -128051.75    316506.56   -10257.907    10266.626    10266.056     10241.04    -12.02606   0.46910035  -0.56547318 
+    2500            0   -128051.79            0   -128051.79    316506.56   -10259.157    10268.209    10267.053    10242.207   -12.124265 -0.074383965  -0.83060914 
+    2550            0   -128051.81            0   -128051.81    316506.56   -10260.023    10270.051    10267.823    10242.197    -12.35054  -0.28347555  -0.86721038 
+    2600            0   -128051.85            0   -128051.85    316506.56   -10260.253    10270.116    10267.617    10243.026   -12.848803  -0.45235721   -1.6411047 
+    2650            0   -128051.89            0   -128051.89    316506.56   -10259.339    10269.317    10266.658    10242.044   -12.852044  -0.53639643  -0.71693371 
+    2700            0   -128051.91            0   -128051.91    316506.56   -10259.816    10270.829    10266.972    10241.648   -12.509383   -0.8480794  -0.53217096 
+    2750            0   -128051.93            0   -128051.93    316506.56   -10258.987    10270.407    10265.942    10240.614    -13.20004  -0.87572428  -0.81478029 
+    2800            0   -128051.97            0   -128051.97    316506.56   -10254.636    10266.538     10261.06    10236.311   -13.472334  -0.94777305   -1.1287187 
+    2850            0      -128052            0      -128052    316506.56   -10257.768    10270.023    10264.964    10238.318   -13.346109   -0.6347779   -1.6229232 
+    2900            0   -128052.02            0   -128052.02    316506.56    -10260.12    10272.521    10267.459    10240.379   -13.289739  -0.49499616   -1.7664011 
+    2950            0   -128052.05            0   -128052.05    316506.56   -10261.558    10274.429    10268.166    10242.079   -13.856206  -0.56800418   -2.2913731 
+    3000            0   -128052.06            0   -128052.06    316506.56   -10261.371    10273.612    10268.043    10242.458   -13.742594  -0.63459361   -1.8651235 
+    3050            0   -128052.08            0   -128052.08    316506.56   -10263.328    10275.009    10270.482    10244.492    -14.36157  -0.81908551   -1.8157555 
+    3100            0   -128052.09            0   -128052.09    316506.56   -10260.727    10272.455     10267.65    10242.077   -14.759789   -0.4148348   -1.4711339 
+    3150            0   -128052.12            0   -128052.12    316506.56    -10261.04    10272.318    10267.489    10243.313   -14.860324   -0.5829826   -1.3344757 
+    3200            0   -128052.15            0   -128052.15    316506.56   -10260.424    10271.377     10266.79    10243.106   -14.748173  -0.26092584   -1.2960815 
+    3250            0   -128052.18            0   -128052.18    316506.56   -10258.881    10269.646    10264.765    10242.233   -14.683825  -0.33447549  -0.86570028 
+    3300            0    -128052.2            0    -128052.2    316506.56   -10258.936    10269.615    10265.375    10241.818   -14.219567   -1.2056379  -0.77233923 
+    3350            0   -128052.21            0   -128052.21    316506.56   -10257.009    10267.906    10263.314    10239.808   -14.992858   -1.2358562   -1.2313502 
+    3400            0   -128052.22            0   -128052.22    316506.56   -10257.303    10269.208    10262.893    10239.807   -15.197489   -1.7787353   -1.1389119 
+    3450            0   -128052.24            0   -128052.24    316506.56   -10256.628    10268.341    10262.366    10239.177    -15.86616   -2.0788133   -1.1067693 
+    3500            0   -128052.26            0   -128052.26    316506.56   -10258.793    10270.814    10264.797    10240.769   -15.837453   -2.5350409  -0.87084789 
+    3550            0   -128052.26            0   -128052.26    316506.56   -10261.037    10273.177    10266.753    10243.182   -15.406879   -2.9731624   -1.0218515 
+    3600            0   -128052.29            0   -128052.29    316506.56   -10257.711    10270.172    10263.101    10239.861   -15.161219   -2.3806762  -0.78818682 
+    3650            0    -128052.3            0    -128052.3    316506.56    -10258.87    10271.283    10263.856     10241.47   -14.623659   -1.9427249   -1.0739647 
+    3700            0   -128052.31            0   -128052.31    316506.56   -10261.834    10274.576      10266.8    10244.127   -14.721369   -2.0978787   -1.6199412 
+    3750            0   -128052.31            0   -128052.31    316506.56     -10264.2    10277.424    10268.676    10246.499    -14.83864   -1.9424983    -1.584033 
+    3800            0   -128052.33            0   -128052.33    316506.56    -10266.53    10279.822    10270.802    10248.965   -13.955619   -1.6165127   -1.0060675 
+    3850            0   -128052.35            0   -128052.35    316506.56   -10266.028    10279.429    10270.377    10248.278   -13.963085   -1.5737681   -1.3063244 
+    3900            0   -128052.36            0   -128052.36    316506.56   -10264.125    10277.843     10267.98    10246.551   -14.004489   -1.5526006   -1.3659917 
+    3950            0   -128052.39            0   -128052.39    316506.56   -10261.368    10274.941    10265.485    10243.679    -14.37011   -0.9981677   -1.5218137 
+    4000            0    -128052.4            0    -128052.4    316506.56   -10263.876    10277.278    10268.745    10245.606   -14.238573  -0.75475605   -1.2670955 
+Loop time of 2351.41 on 20 procs for 4000 steps with 28800 atoms
+
+Performance: 0.147 ns/day, 163.292 hours/ns, 1.701 timesteps/s
+99.3% CPU use with 20 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 20.28      | 21.018     | 21.858     |  11.6 |  0.89
+Neigh   | 32.718     | 33.701     | 34.489     |   9.7 |  1.43
+Comm    | 0.91938    | 1.0937     | 1.2921     |   8.0 |  0.05
+Output  | 7.0463     | 7.1197     | 8.4743     |  11.6 |  0.30
+Modify  | 2287       | 2288.4     | 2288.5     |   0.7 | 97.32
+Other   |            | 0.1176     |            |       |  0.00
+
+Nlocal:        1440.00 ave        1440 max        1440 min
+Histogram: 20 0 0 0 0 0 0 0 0 0
+Nghost:        6469.00 ave        6469 max        6469 min
+Histogram: 20 0 0 0 0 0 0 0 0 0
+Neighs:       161280.0 ave      161715 max      160882 min
+Histogram: 3 0 0 5 4 2 2 2 0 2
+FullNghs:     322560.0 ave      322560 max      322560 min
+Histogram: 20 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 6451200
+Ave neighs/atom = 224.00000
+Neighbor list builds = 8000
+Dangerous builds = 0
+System init for write_data ...
+Total wall time: 0:39:11
+

@@ -1,0 +1,188 @@
+units   metal
+boundary    p p p
+atom_style    atomic
+#lattice        bcc 3.021
+
+#region		entirebox prism 0 258.666       0.0    365.81   0 9.956 0 0 0 units box 
+#create_box      2 entirebox
+
+
+#region		upper   prism    0 258.666      243.878    365.81   0 9.956  0 0 0 units box
+#region		twin   prism    0 258.666      121.941    243.873   0 9.956  0 0 0 units box
+#region		lower   prism    0 258.666      0.0    121.936   0 9.956  0 0 0 units box
+
+
+#lattice         fcc 3.52 orient x 1 1 -2 orient y 1 1 1 orient z 1 -1 0 origin 0.9 0.9 0.9
+
+#create_atoms    1 region upper 
+
+#lattice         fcc 3.52 orient x -1 -1 2 orient y 1 1 1 orient z -1 1 0 origin 0.9 0.9 0.9
+
+#create_atoms    1 region twin 
+
+#lattice         fcc 3.52 orient x 1 1 -2 orient y 1 1 1 orient z 1 -1 0 origin 0.9 0.9 0.9
+
+#create_atoms    1 region lower 
+
+
+read_data 2.data
+
+
+#pair_style        eam/fs
+#pair_coeff      * * niti_fr.eam.fs Ni Ti
+
+#pair_style       meam/c
+#pair_coeff       * * library.meam Ni Ti NiTi.meam Ni Ti
+
+#write_data        1.data
+
+pair_style	eam/alloy
+pair_coeff	* * NiCo-lammps-2014.alloy Ni Co
+
+#group 1 region entirebox
+#set group 1 type/fraction 2 0.2 12393
+
+#write_data        5.data
+
+## COMPUTES 
+#==========
+
+compute 		sigma all stress/atom NULL
+
+compute		xx all reduce sum c_sigma[1]
+compute		yy all reduce sum c_sigma[2]
+compute		zz all reduce sum c_sigma[3]
+compute 		xy all reduce sum c_sigma[4]
+compute 		xz all reduce sum c_sigma[5]
+compute 		yz all reduce sum c_sigma[6]
+
+variable		stxx equal c_xx/(vol)
+variable 		styy equal c_yy/(vol)
+variable		stzz equal c_zz/(vol)
+variable		stxy equal c_xy/(vol)
+variable		stxz equal c_xz/(vol)
+variable		styz equal c_yz/(vol)
+
+variable        L equal  201.24
+
+variable        strainyy equal (ly-v_L)/v_L
+
+
+
+compute           pe  all pe/atom
+compute           ke  all ke/atom
+compute           csp all centro/atom fcc
+compute 		peratom all stress/atom NULL
+
+
+dump            cfgformat all cfg 50 runstep_*.cfg mass type xs ys zs c_csp c_pe c_ke c_peratom[1] c_peratom[2] c_peratom[3] c_peratom[4] c_peratom[5] c_peratom[6]
+dump_modify     cfgformat  element Ni Ti
+
+
+
+thermo		50
+thermo_style custom step temp pe ke etotal vol press v_stxx v_styy v_stzz v_stxy v_stxz v_styz
+
+#timestep        0.001
+#minimize        1.0e-8 1.0e-8 100000 100000
+
+
+
+## TEMPERATURE CONTROLLER 
+#========================
+
+
+#compute         temp3d all temp
+#velocity        all create 10 5812775 temp temp3d
+
+#timestep        0.001
+#minimize        1.0e-8 1.0e-8 100000 100000
+
+#fix equil all npt temp 10 10 0.04 tri 0 0 0.5
+#timestep 0.001
+#run 2000
+
+#unfix equil
+
+#fix equil2 all npt temp 10 10 0.04 tri 0 0 0.5
+#fix 2 all atom/swap 10 100 29494 10 semi-grand no ke yes types 1 2
+#timestep 0.001
+#run 5000
+
+
+#unfix equil2 
+#unfix 2
+fix equil2 all npt temp 10 10 0.04 y 0 0 0.5 z 0 0 0.5
+run 500
+unfix equil2
+
+
+#write_data        4.data
+#thermo		5
+#thermo_style custom step temp pe ke etotal vol press v_stxx v_styy v_stzz v_stxy v_stxz v_styz
+
+# Equilibriating by NPT Algorithm
+#=================================
+
+#fix 2 all atom/swap 1 1 29494 10 semi-grand no types 1 2
+
+#fix 2 1 gcmc 1 100 100 2 29494 10 -0.5 10.0 pressure 0
+
+#timestep 0.001
+#run 1000
+
+#fix equil2 all npt temp 10 10 0.04 tri 0 0 0.5
+#timestep 0.001
+#run 500
+
+
+
+#compute RDF all rdf 200 2 2
+compute RDF all rdf 200 2 2
+fix 1 all ave/time 1 100 100 c_RDF[*] file tmp.rdf mode vector
+timestep 0.001
+run 500
+
+
+#region		hole cylinder z 125 60 8 -500 500 units box
+#delete_atoms	region hole
+#region		hole2 cylinder z 75 -27 3 -500 500 units box
+#delete_atoms	region hole2
+#region		hole3 cylinder z 95 -27 3 -500 500 units box
+#delete_atoms	region hole3
+
+
+
+
+#dump            cfgformat2 all cfg 100 runstep_*.cfg mass type xs ys zs c_csp c_pe c_ke c_peratom[1] c_peratom[2] c_peratom[3] c_peratom[4] c_peratom[5] c_peratom[6]
+#dump_modify     cfgformat2  element Ni Ti
+#dump 		1 all custom 250 dump.two-element.dat id type x y z fx fy fz
+#write_data        1.data
+
+#timestep 0.001
+#run 100
+
+#region		hole cylinder z 130 -50 3.5 -500 500 units box
+#delete_atoms	region hole
+
+
+#dump          cfgformat2 all cfg 100 runstep_*.cfg mass type xs ys zs c_csp c_pe c_ke c_peratom[1] c_peratom[2] c_peratom[3] c_peratom[4] c_peratom[5] c_peratom[6]
+#dump_modify   cfgformat element Ni Ti 
+
+#fix             thermoBaro all npt temp 10 10 0.04 x 0 0 5 y 0 0 5 z 0 0 5 xy 0 0 5 yz 0 0 5 couple none 
+#fix             def all deform 1 xz final 1.4 remap x units box
+
+#fix             averaging  all ave/time 1 100 100 v_stxx v_styy v_stzz v_stxy v_stxz v_styz  file load.stress
+
+#timestep 0.001
+#run 70000
+
+
+
+
+
+
+
+
+
+
